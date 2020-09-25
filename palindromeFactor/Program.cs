@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace palindromeFactor
 {
@@ -12,39 +13,41 @@ namespace palindromeFactor
             var source = Console.ReadLine();
             Console.WriteLine(FindMinimalPalindrome(source));
         }
+        const int MIN_LENGTH = 2;
+        const int MAX_LENGTH = 3;
         static string FindMinimalPalindrome(string source)
         {
-            var lengths = Enumerable.Range(2, source.Length + 2);
-
-            foreach (int palindromeLength in lengths)
+            string res = null;
+            for (int i = 0; i <= source.Length - MIN_LENGTH; i++)
             {
-                var extracted = ExtractPalindromes(source, palindromeLength);
-
-                var minimal = extracted.Min();
-                if (!string.IsNullOrEmpty(minimal))
-                    return minimal;
+                if (source.IsEqualChars(i, i + MIN_LENGTH - 1))
+                {
+                    ChangeIfBetter(ref res, source.Substring(i, MIN_LENGTH));
+                }
+                else if (res?.Length != MIN_LENGTH &&
+                    i <= source.Length - MAX_LENGTH &&
+                    source.IsEqualChars(i, i + MAX_LENGTH - 1))
+                {
+                    ChangeIfBetter(ref res, source.Substring(i, MAX_LENGTH));
+                }
             }
-            return "-1";
+            return string.IsNullOrEmpty(res) ? "-1" : res;
         }
-        static IEnumerable<string> ExtractPalindromes(string source, int palindromeLength)
+        static void ChangeIfBetter(ref string oldValue, string newValue)
         {
-            for (int i = 0; i <= source.Length - palindromeLength; i++)
+            if (string.IsNullOrEmpty(oldValue) ||
+                oldValue.CompareTo(newValue) > 0 ||
+                newValue.Length < oldValue.Length)
             {
-                var testStr = source.Slice(i, palindromeLength);
-                if (IsPalindrome(testStr))
-                    yield return new string(testStr.ToArray());
+                oldValue = newValue;
             }
-        }
-        static bool IsPalindrome(IEnumerable<char> testTarget)
-        {
-            return testTarget.SequenceEqual(testTarget.Reverse());
-        }
+        }   
     }
-    static class IEnumerableSliceExtension
+    static class StringExtensions
     {
-        public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, int start, int length)
+        public static bool IsEqualChars(this string source, int idx1, int idx2)
         {
-            return source.Skip(start).Take(length);
+            return source[idx1] == source[idx2];
         }
     }
 }
