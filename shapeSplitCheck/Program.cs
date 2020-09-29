@@ -47,10 +47,10 @@ namespace shapeSplitCheck
                 return true;
             }
         }
-        static Point CalcRectangleMidPoint(IEnumerable<Point> points)
+        static Point CalcRectangleMidPoint(List<Point> points)
         {
-            var mX = (points.Max(p => p.X) + points.Min(p => p.X)) / 2;
-            var mY = (points.Max(p => p.Y) + points.Min(p => p.Y)) / 2;
+            var mX = (points[0].X - points[2].X) / 2;
+            var mY = (points[0].Y - points[2].Y) / 2;
             return new Point(mX, mY);
         }
         static IEnumerable<int> ReadIntLine()
