@@ -20,7 +20,7 @@ namespace shapeSplitCheck
                         break;
                     case 1:
                         var rectPoints = new List<Point>();
-                        for (int pIdx = 0; pIdx < 4 * 2; pIdx += 2)
+                        for (int pIdx = 1; pIdx < 4 * 2; pIdx += 2)
                         {
                             rectPoints.Add(new Point(shapeParams[pIdx], shapeParams[pIdx + 1]));
                         }
